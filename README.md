@@ -1,5 +1,5 @@
 # 🦆<br>duckpond
 
-![ducks in a pond](duckpond.jpg)
+![ducks in a pond](duckpond-banner.jpg)
 
 twilio on quack
