@@ -22,7 +22,7 @@ just reply "stop" to leave."""
 
 INTRO_MESSAGE = """you're one of {n} people in the invite-only duckpond.
 write a msg to talk to a random member.
-send "next" to talk to someone else, or "report" for jerks.
+send "next" to talk to someone else, "mute" to stop talking, or "report" for jerks.
 
 you're in spot #{spot}. #{n} gets booted when someone new joins.
 invite someone to stay on top: "invite <phone #>".
@@ -61,6 +61,15 @@ def find_new_conversation(member: Member, last_mid: Optional[str] = None):
     random.shuffle(valid_invitation_ids)
     # Now try to find a candidate until there's nobody left...
     for mid in valid_invitation_ids:
+        other_member = members.get_by_id(mid)
+        if not other_member:
+            continue
+
+        other_member = Member.from_db(other_member)
+
+        if other_member.muted:
+            continue
+
         for conversation in conversations.get_conversations_for_member(mid):
             print(
                 datetime.datetime.utcnow()
@@ -157,6 +166,12 @@ def handle_command(text, member: Optional[Member]):
             + 1
         )
         return INTRO_MESSAGE.format(n=N_PEOPLE, spot=invite_position)
+    if command == "mute":
+        current_conversations = conversations.get_conversations_for_member(member.id)
+        for conversation in current_conversations:
+            conversations.delete_conversation(conversation["id"])
+        members.set_muted(member.id, True)
+        return "you've muted duckpond.\nsend another message to jump back in."
 
     # This is just getting uglier and uglier
     send_text = True
