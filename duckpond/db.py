@@ -208,6 +208,13 @@ class Members(BaseDatabaseAccessor):
         except ClientError:
             raise
 
+    def set_muted(self, mid, muted):
+        self.table.update_item(
+            Key={"id": mid},
+            UpdateExpression="SET muted = :muted",
+            ExpressionAttributeValues={":muted": muted},
+        )
+
     def report_member(self, mid):
         self.table.update_item(
             Key={"id": mid},
@@ -225,6 +232,7 @@ class Members(BaseDatabaseAccessor):
                 "id": uuid.uuid4().hex,
                 "phoneNumber": phone_number,
                 "created": datetime.utcnow().isoformat(),
+                "muted": False,
                 # Should probably have more info here
                 "reportCount": 0,
             }
