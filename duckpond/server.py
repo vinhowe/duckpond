@@ -198,6 +198,9 @@ def handle_command(text, member: Optional[Member]):
         else conversations.get_conversations_for_member(member.id)
     )
 
+    # Unmute if we're muted
+    members.set_muted(member.id, False)
+
     response = None
     new_conversation = False
     if current_conversations:
