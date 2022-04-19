@@ -1,3 +1,5 @@
-# duckpond
+# 🦆<br>duckpond
 
-an unbelievably cool twilio project
+![ducks in a pond](duckpond.jpg)
+
+twilio on quack
