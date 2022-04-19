@@ -110,8 +110,10 @@ def handle_command(text, member: Optional[Member]):
         if invite_member.id in invitations.last_n(N_PEOPLE):
             return "quack!\nthey've already been invited."
 
-        config.increment_invite_count()
+        # Increment by 2 because both us and the person we invite are added
+        config.increment_invite_count(increment_by=2)
 
+        # It is correct that the invite count here skips values
         invitations.add_invitation(member.id, invite_member.id, config.invite_count())
 
         print(f"{member.phone} invited {invite_member.phone} to duckpond")
